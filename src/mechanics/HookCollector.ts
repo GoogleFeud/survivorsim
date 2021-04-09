@@ -23,6 +23,7 @@ export class HookCollector {
         const allLen = all.length;
         if (allLen === 1) return all[0](...args, () => {});
         let i = 0;
+        // We don't use push() here so the order remains the same
         const res: Array<T> = new Array(allLen);
         const next = () => {
             if (i === allLen) return;
