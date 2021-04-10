@@ -31,16 +31,15 @@ export interface ClockSettings {
     startingEpisode?: number
 }
 
-export class Clock {
-    emitter: EventEmitter
+export class Clock extends EventEmitter {
     episode: number
     phase: number
     phaseCount: number
     private originalPhaseCount: number
     private scheduledFunctions: Record<number, Record<number, Function[]>>
     private startingEpisode: number
-    constructor(emitter: EventEmitter, settings: ClockSettings) {
-        this.emitter = emitter;
+    constructor(settings: ClockSettings) {
+        super();
         this.episode = this.startingEpisode = settings.startingEpisode ?? 0;
         this.phase = 0;
         this.phaseCount = settings.phasesPerEpisode;
@@ -49,15 +48,15 @@ export class Clock {
     }
 
     progress() : void {
-        if (this.episode === this.startingEpisode && this.phase === 0) this.emitter.emit("episode", this.episode);
+        if (this.episode === this.startingEpisode && this.phase === 0) this.emit("episode", this.episode);
         if (this.phase === this.phaseCount) {
             this.call(this.episode, this.phase);
             this.phaseCount = this.originalPhaseCount;
-            this.emitter.emit("episode", ++this.episode);
+            this.emit("episode", ++this.episode);
             this.phase = 0;
         } else {
             this.call(this.episode, ++this.phase);
-            this.emitter.emit("phase", this.phase);
+            this.emit("phase", this.phase);
         }
     }
 
