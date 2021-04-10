@@ -4,6 +4,8 @@ import EventEmitter from "eventemitter3";
  * The survivorsim Clock represents the survivor cycle - not in days, but in **episodes**.
  * Every episode has an amount of phases, where a different thing happens. 
  * 
+ * Phases always start at 1.
+ * 
  * For example:
  * Episode 1:
  *  - Phase 1: First Impressions
@@ -88,6 +90,17 @@ export class Clock extends EventEmitter {
         if (!arr) return;
         for (const fn of arr) fn(this);
         delete this.scheduledFunctions[episode][phase];
+    }
+
+    phasesToEpisodes(p: number) : { episodes: number, phases: number } {
+        if (p <= this.phaseCount) return { episodes: 0, phases: p };
+        let episodes = 0;
+        while(p > this.phaseCount) {
+            const remainder = p - this.phaseCount;
+            episodes++;
+            p = remainder;
+        }
+        return { episodes, phases: p };
     }
 
 }

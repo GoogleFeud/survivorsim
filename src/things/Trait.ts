@@ -1,3 +1,4 @@
+import { Player } from "../structures/Player";
 import { Weighted } from "../utils/Rng";
 
 /**
@@ -20,5 +21,5 @@ import { Weighted } from "../utils/Rng";
 export interface Trait extends Weighted {
     name: string,
     id: string,
-    (): void
+    (player: Player): void
 }

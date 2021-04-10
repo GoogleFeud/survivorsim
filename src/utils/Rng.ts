@@ -11,6 +11,7 @@ export default class RNG {
         this.seed = alea(seed);
     }
 
+    btw(min: number, max: number) : number
     btw(min: number, max: number, amount = 1) : number|number[] {
         if (amount === 1) return Math.floor(this.seed() * (max - min) + min);
         return Array.from({length: Math.max(amount, 1)}, () => Math.floor(this.seed() * (max - min) + min));
