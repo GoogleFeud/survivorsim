@@ -14,5 +14,5 @@ export class PlayerCollection extends Map<string, Player> {
         this.set(player.name, player);
         return player;
     }
-    
+
 }

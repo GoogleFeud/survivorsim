@@ -1,7 +1,7 @@
 import { MemoryCollection } from "../collections/MemoryCollection";
 import { Engine } from "../Engine";
+import { HookCollector } from "../mechanics/HookCollector";
 import { Trait } from "../things/Trait";
-
 
 export interface PlayerDetails {
     name: string,
@@ -20,15 +20,17 @@ export class Player {
     traits: Set<string> // Trait ID
     mood: number
     memories: MemoryCollection
+    hooks: HookCollector
     constructor(engine: Engine, details: PlayerDetails) {
         this.engine = engine;
         this.name = details.name;
         this.middleName = details.middleName;
         this.age = details.age ?? engine.rng.btw(19, 54);
         this.job = details.job;
+        this.hooks = new HookCollector();
         this.traits = new Set();
         for (const trait of details.traits) {
-            trait(this);
+            trait.fn(this);
             this.traits.add(trait.id);
         }
         this.mood = 0;
