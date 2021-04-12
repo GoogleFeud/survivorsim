@@ -1,4 +1,5 @@
 import { MemoryList } from "../collections/MemoryList";
+import { RelationshipCollection } from "../collections/RelationshipCollection";
 import { Engine } from "../Engine";
 import { HookCollector } from "../mechanics/HookCollector";
 import { BaseStrategy } from "../things/Strategy";
@@ -27,6 +28,7 @@ export class Player {
     memories: MemoryList
     hooks: HookCollector
     eliminated: boolean
+    relationships: RelationshipCollection
     tribe?: Tribe
     constructor(engine: Engine, details: PlayerDetails) {
         this.engine = engine;
@@ -38,12 +40,13 @@ export class Player {
         this.eliminated = false;
         this.hooks = new HookCollector();
         this.traits = new Set();
+        this.relationships = new RelationshipCollection();
+        this.mood = 0;
+        this.memories = new MemoryList(this);
         for (const trait of details.traits) {
             trait.hook(this);
             this.traits.add(trait.id);
         }
-        this.mood = 0;
-        this.memories = new MemoryList(this);
         this.strategy = details.strategy ? new details.strategy(this): new (engine.rng.arrWeighted(engine.strategies)[0] as typeof BaseStrategy)(this);
     }
 

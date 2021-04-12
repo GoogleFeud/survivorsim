@@ -11,6 +11,7 @@ import { Player } from "../structures/Player";
 export class BaseStrategy {
     static weight: number
     static id: string 
+    static description?: string
     player: Player
     constructor(player: Player) {
         this.player = player;

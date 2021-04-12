@@ -21,5 +21,6 @@ import { Weighted } from "../utils/Rng";
 export interface Trait extends Weighted {
     name: string,
     id: string,
+    description?: string,
     hook: (player: Player) => unknown
 }

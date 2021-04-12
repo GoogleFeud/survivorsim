@@ -8,8 +8,9 @@
 
 export interface Memory {
     [key: string]: unknown,
-    id: string,
+    name: string,
     moodBoost?: number,
+    description?: string,
     expiresIn?: {episodes?: number, phases: number},
     _fn?: Function
 }
