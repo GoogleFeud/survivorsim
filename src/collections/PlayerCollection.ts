@@ -1,8 +1,8 @@
 import { Engine } from "../Engine";
 import { Player, PlayerDetails } from "../structures/Player";
+import { Collection } from "../utils/Collection";
 
-
-export class PlayerCollection extends Map<string, Player> {
+export class PlayerCollection extends Collection<Player> {
     engine: Engine
     constructor(engine: Engine) {
         super();

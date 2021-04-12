@@ -2,7 +2,7 @@ import { Player } from "../structures/Player";
 import { Memory } from "../things/Memory";
 
 
-export class MemoryCollection extends Array<Memory> {
+export class MemoryList extends Array<Memory> {
     player: Player
     constructor(player: Player) {
         super();

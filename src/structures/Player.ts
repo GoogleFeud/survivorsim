@@ -1,14 +1,18 @@
-import { MemoryCollection } from "../collections/MemoryCollection";
+import { MemoryList } from "../collections/MemoryList";
 import { Engine } from "../Engine";
 import { HookCollector } from "../mechanics/HookCollector";
+import { BaseStrategy } from "../things/Strategy";
 import { Trait } from "../things/Trait";
+import { Tribe } from "./Tribe";
 
 export interface PlayerDetails {
     name: string,
     middleName: string,
     age?: number,
     job?: string,
-    traits: Array<Trait>
+    tribe?: Tribe
+    traits: Array<Trait>,
+    strategy?: typeof BaseStrategy
 }
 
 export class Player {
@@ -18,23 +22,29 @@ export class Player {
     age: number
     job?: string
     traits: Set<string> // Trait ID
+    strategy: BaseStrategy
     mood: number
-    memories: MemoryCollection
+    memories: MemoryList
     hooks: HookCollector
+    eliminated: boolean
+    tribe?: Tribe
     constructor(engine: Engine, details: PlayerDetails) {
         this.engine = engine;
         this.name = details.name;
         this.middleName = details.middleName;
         this.age = details.age ?? engine.rng.btw(19, 54);
         this.job = details.job;
+        this.tribe = details.tribe;
+        this.eliminated = false;
         this.hooks = new HookCollector();
         this.traits = new Set();
         for (const trait of details.traits) {
-            trait.fn(this);
+            trait.hook(this);
             this.traits.add(trait.id);
         }
         this.mood = 0;
-        this.memories = new MemoryCollection(this);
+        this.memories = new MemoryList(this);
+        this.strategy = details.strategy ? new details.strategy(this): new (engine.rng.arrWeighted(engine.strategies)[0] as typeof BaseStrategy)(this);
     }
 
     get fullName() : string {
