@@ -6,6 +6,7 @@ import {TribeCollection } from "./collections/TribeCollection";
 import RNG from "./utils/Rng";
 import { TraitList } from "./collections/TraitList";
 import { StrategyList } from "./collections/StrategyList";
+import { EventPool } from "./collections/EventPool";
 
 export class Engine extends EventEmitter {
     rng: RNG
@@ -13,6 +14,7 @@ export class Engine extends EventEmitter {
     tribes: TribeCollection
     traits: TraitList
     strategies: StrategyList
+    events: EventPool
     clock: Clock
     constructor() {
         super();
@@ -22,6 +24,7 @@ export class Engine extends EventEmitter {
         this.tribes = new TribeCollection(this);
         this.traits = new TraitList();
         this.strategies = new StrategyList();
+        this.events = new EventPool(this);
     }
 
 

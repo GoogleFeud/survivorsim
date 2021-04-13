@@ -1,5 +1,5 @@
 import { MemoryList } from "../collections/MemoryList";
-import { RelationshipCollection } from "../collections/RelationshipCollection";
+import { OpinionCollection } from "../collections/OpinionCollection";
 import { Engine } from "../Engine";
 import { HookCollector } from "../mechanics/HookCollector";
 import { BaseStrategy } from "../things/Strategy";
@@ -16,7 +16,7 @@ export interface PlayerDetails {
     strategy?: typeof BaseStrategy
 }
 
-export class Player {
+export class Player extends HookCollector {
     engine: Engine
     name: string
     middleName: string
@@ -24,13 +24,13 @@ export class Player {
     job?: string
     traits: Set<string> // Trait ID
     strategy: BaseStrategy
-    mood: number
+    private _mood: number
     memories: MemoryList
-    hooks: HookCollector
     eliminated: boolean
-    relationships: RelationshipCollection
+    opinions: OpinionCollection
     tribe?: Tribe
     constructor(engine: Engine, details: PlayerDetails) {
+        super();
         this.engine = engine;
         this.name = details.name;
         this.middleName = details.middleName;
@@ -38,16 +38,24 @@ export class Player {
         this.job = details.job;
         this.tribe = details.tribe;
         this.eliminated = false;
-        this.hooks = new HookCollector();
         this.traits = new Set();
-        this.relationships = new RelationshipCollection();
-        this.mood = 0;
+        this.opinions = new OpinionCollection(this);
+        this._mood = 0;
         this.memories = new MemoryList(this);
         for (const trait of details.traits) {
             trait.hook(this);
             this.traits.add(trait.id);
         }
         this.strategy = details.strategy ? new details.strategy(this): new (engine.rng.arrWeighted(engine.strategies)[0] as typeof BaseStrategy)(this);
+    }
+
+    get mood() : number {
+        return this._mood;
+    }
+
+    set mood(val: number) {
+        this.emit("moodChange", this.mood, val);
+        this._mood = val;
     }
 
     get fullName() : string {
