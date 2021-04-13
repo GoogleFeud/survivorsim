@@ -16,6 +16,14 @@ export class Collection<V> extends Map<string, V> {
         return res;
     }
 
+    count(cb: CollectionCb<V>) : number {
+        let res = 0;
+        for (const [key, val] of this) {
+            if (cb(val, key)) res++;
+        }
+        return res;
+    }
+
     filterArray(cb: CollectionCb<V>) : Array<V> {
         const res = [];
         for (const [key, val] of this) {

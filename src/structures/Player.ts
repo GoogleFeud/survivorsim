@@ -4,6 +4,7 @@ import { Engine } from "../Engine";
 import { HookCollector } from "../mechanics/HookCollector";
 import { BaseStrategy } from "../things/Strategy";
 import { Trait } from "../things/Trait";
+import { Alliance } from "./Alliance";
 import { Tribe } from "./Tribe";
 
 export interface PlayerDetails {
@@ -11,7 +12,7 @@ export interface PlayerDetails {
     middleName: string,
     age?: number,
     job?: string,
-    tribe?: Tribe
+    tribe: Tribe
     traits: Array<Trait>,
     strategy?: typeof BaseStrategy
 }
@@ -28,7 +29,7 @@ export class Player extends HookCollector {
     memories: MemoryList
     eliminated: boolean
     opinions: OpinionCollection
-    tribe?: Tribe
+    tribe: Tribe
     constructor(engine: Engine, details: PlayerDetails) {
         super();
         this.engine = engine;
@@ -49,6 +50,14 @@ export class Player extends HookCollector {
         this.strategy = details.strategy ? new details.strategy(this): new (engine.rng.arrWeighted(engine.strategies)[0] as typeof BaseStrategy)(this);
     }
 
+    alliances() : Alliance[] {
+        return this.tribe.alliances.filter(a => a.members.has(this.name));
+    }
+
+    alliancesWith(player: Player) : Alliance[] {
+        return this.tribe.alliances.filter(a => a.members.has(this.name) && a.members.has(player.name));
+    }
+
     get mood() : number {
         return this._mood;
     }
@@ -58,7 +67,7 @@ export class Player extends HookCollector {
         this._mood = val;
     }
 
-    get fullName() : string {
+    fullName() : string {
         return `${this.name} ${this.middleName}`;
     }
 

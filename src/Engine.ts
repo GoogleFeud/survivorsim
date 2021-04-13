@@ -7,6 +7,7 @@ import RNG from "./utils/Rng";
 import { TraitList } from "./collections/TraitList";
 import { StrategyList } from "./collections/StrategyList";
 import { EventPool } from "./collections/EventPool";
+import { Player } from "./structures/Player";
 
 export class Engine extends EventEmitter {
     rng: RNG
@@ -25,6 +26,11 @@ export class Engine extends EventEmitter {
         this.traits = new TraitList();
         this.strategies = new StrategyList();
         this.events = new EventPool(this);
+
+        this.on("opinionChange", (player: Player, other: Player) => {
+            
+        });
+
     }
 
 
